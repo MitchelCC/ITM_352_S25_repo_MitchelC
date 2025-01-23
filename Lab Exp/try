@@ -1,0 +1,4 @@
+input = int(input("Enter number between 1-100: "))
+print("The square of: " + str(input) + " is " + str(input ** 2))
+
+
