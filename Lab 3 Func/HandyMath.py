@@ -10,7 +10,7 @@ def exponent(base, power):
     return base**power
 
 def max_of_2(a, b):
-    return max(a, b)
+    return a if a > b else b
 
 def min_of_2(a, b):
-    return min(a, b)
+    return a if a < b else b
