@@ -3,6 +3,8 @@ first = input("Enter first name: ")
 middle = input("Enter middle initial: ")
 last = input("Enter last name: ")
 
-FullName = "{} {}. {}". format(first, middle, last)
+names = [first, middle, last]
+
+FullName = "{} {}. {}". format(names)
 
 print(f"You full name is {FullName}")

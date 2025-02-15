@@ -3,6 +3,7 @@ first = input("Enter first name: ")
 middle = input("Enter middle initial: ")
 last = input("Enter last name: ")
 
-FullName = "{} {}. {}".join(first, middle, last)
+names = [first, middle, last]
+FullName = " ".join(names)
 
 print(f"You full name is {FullName}")
