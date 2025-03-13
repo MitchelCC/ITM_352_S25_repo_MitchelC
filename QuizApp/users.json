@@ -1,0 +1,10 @@
+{
+    "Mitch": {
+        "password": "1",
+        "high_score": 3
+    },
+    "tom": {
+        "password": "1",
+        "high_score": 5
+    }
+}

@@ -1,0 +1,52 @@
+[
+    {
+        "question": "How many legs does a Arachnids typically have?",
+        "options": [
+            "A. 4",
+            "B. 6",
+            "C. 8",
+            "D. 7"
+        ],
+        "correct_answer": "C"
+    },
+    {
+        "question": "What is the fastest land animal?",
+        "options": [
+            "A. Cheetah",
+            "B. Cat",
+            "C. Antelope",
+            "D. Deer"
+        ],
+        "correct_answer": "A"
+    },
+    {
+        "question": "What is the heaviest animal in the world?",
+        "options": [
+            "A. Fin Whale",
+            "B. Elephant",
+            "C. Blue Whale",
+            "D. Sperm Whale"
+        ],
+        "correct_answer": "C"
+    },
+    {
+        "question": "How fast can a cheetah run?",
+        "options": [
+            "A. 70MPH",
+            "B. 65MPH",
+            "C. 80MPH",
+            "D. 75MPH"
+        ],
+        "correct_answer": "D"
+    },
+    {
+        "question": "What is the biggest bird in the planet?",
+        "options": [
+            "A. Emu",
+            "B. Ostrich",
+            "C. Cassowary",
+            "D. Emperor Penguin"
+        ],
+        "correct_answer": "B"
+    }
+]
