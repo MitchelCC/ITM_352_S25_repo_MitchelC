@@ -6,5 +6,9 @@
     "tom": {
         "password": "1",
         "high_score": 5
+    },
+    "mitch": {
+        "password": "1",
+        "high_score": 3
     }
 }

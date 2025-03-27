@@ -18,5 +18,9 @@
     "2": {
         "password": "1",
         "high_score": 0
+    },
+    "mitch": {
+        "password": "1",
+        "high_score": 0
     }
 }

@@ -8,7 +8,6 @@ USERS_FILE = "users.json"
 
 #load question from JSON file
 def load_questions():
-    """Load questions from the JSON file."""
     if not os.path.exists(QUESTIONS_FILE):
         return []  # Return an empty list if the file doesn't exist
     with open(QUESTIONS_FILE, "r") as file:
@@ -16,7 +15,6 @@ def load_questions():
 
 #load users from JSON file
 def load_users():
-    """Load users from the JSON file."""
     if not os.path.exists(USERS_FILE):
         return []  # Return an empty list if the file doesn't exist
     with open(USERS_FILE, "r") as file:
@@ -24,13 +22,11 @@ def load_users():
 
 #save users to json
 def save_users(users):
-    """Save users to the users.json file."""
     with open(USERS_FILE, "w") as file:
         json.dump(users, file, indent=4)
 
 # Register a new user
 def register_user():
-    """Register a new user."""
     username = input("Enter a username: ")
     users = load_users()
     if username in users:
@@ -44,7 +40,6 @@ def register_user():
 
 #Log in an existing User
 def login_user():
-    """Log in an existing user."""
     username = input("Enter your username: ")
     users = load_users()
     if username not in users:
@@ -59,13 +54,11 @@ def login_user():
 
 #save score to scores file
 def save_score(username, score):
-    """Save the user's score to the scores.txt file."""
     with open(SCORES_FILE, "a") as file:
         file.write(f"{username}: {score}\n")
 
 #update high score of usr
 def update_high_score(username, score):
-    """Update the user's high score in the users.json file."""
     users = load_users()
     if score > users[username]["high_score"]:
         users[username]["high_score"] = score
@@ -74,16 +67,14 @@ def update_high_score(username, score):
 
 #Grand champ
 def get_grand_champion():
-    """Get the user with the highest score across all quizzes."""
     users = load_users()
     if not users:
         return None
     grand_champion = max(users.items(), key=lambda x: x[1]["high_score"])
     return grand_champion
 
-# Ask a single question
+# Ask a single question then returns whether it was the correct answer or not
 def ask_question (question_data): 
-    """Ask a single question and return whether the answer was correct."""
     print(f"\n{question_data['question']}")
     for option in question_data["options"]:
         print(option)   
@@ -103,7 +94,6 @@ def ask_question (question_data):
         return False
 
 def run_quiz(username):
-    """run the quiz application."""
     print(f"\nHello {username}, welcome to Quizy!")
     print("Let's get started!\n")
 
@@ -133,7 +123,6 @@ def run_quiz(username):
 
 #main menu
 def main_menu():
-    """Display the main menu and handle user choices."""
     while True:
         print("\n--- Quizy Main Menu ---")
         print("1. Register")
