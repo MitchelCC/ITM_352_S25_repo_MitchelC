@@ -4,7 +4,7 @@ n2 = float(input("Enter number 2: "))
 
 print(f"The midpoint of {n1} and {n2} is {HandyMath.midpoint(n1,n2)}")
 
-print(f"The square root of the square of {n1} is {HandyMath.squareroot(n1**.5)}")
+print(f"The square root of the square of {n2} is {HandyMath.squareroot(n2 **2)}")
 
 print(f"{n1} raised to the exponent of {n2} is {HandyMath.exponent(n1, n2)}")
 

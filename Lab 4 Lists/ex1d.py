@@ -5,6 +5,6 @@ last = input("Enter last name: ")
 
 names = [first, middle, last]
 
-FullName = "{} {}. {}". format(names)
+FullName = "{} {}. {}". format(*names)
 
 print(f"You full name is {FullName}")

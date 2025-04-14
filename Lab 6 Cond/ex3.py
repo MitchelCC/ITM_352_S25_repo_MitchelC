@@ -34,6 +34,6 @@ assert determine_progress1(1,1) == "Almost there!", "Test Case 2 failed"
 assert determine_progress1(1,5) == "On your way!", "Test Case 3 failed"
 
 #test case 4: hits = 5, spins = 10 return "You win!"
-assert determine_progress1(5,10) == "You win!", "Test Case 4 success!"
+assert determine_progress1(5,10) == "You win!", "Test Case 4 failed!"
 
 test_determine_progress(determine_progress1)

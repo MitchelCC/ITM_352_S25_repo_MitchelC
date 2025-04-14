@@ -1,4 +1,3 @@
-# Define the function first
 def check_list_length(lst):
     length = len(lst)
     if length < 5:
@@ -21,4 +20,4 @@ test_cases = [
 # Test all cases
 for idx, case in enumerate(test_cases, 1):
     print(f"\nTest Case {idx}: {case}")
-    check_list_length(case)  # Function is now defined!
+    check_list_length(case)  

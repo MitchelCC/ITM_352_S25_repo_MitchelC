@@ -6,3 +6,6 @@ url = f"https://drive.google.com/uc?id={file_id}"
 df = pd.read_csv(url)
 
 print(df.head())
+
+#shows the rows and columns of the data franme
+print(f"The dimensions  are {df.shape}")

@@ -1,4 +1,4 @@
-import numpy as pd
+import numpy as np
 #cREATE List of tuples
 data = [
     (10, 14629),

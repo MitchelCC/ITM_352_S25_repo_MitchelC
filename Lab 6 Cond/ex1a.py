@@ -11,4 +11,4 @@ emotions = ('happy', 'sad', 'fear', 'surprise')
 if((len(emotions) > 3) and (emotions[-1] == 'happy')):
     print("len is > 3 and last element is happy")
 else:
-    print('len is not > 3 or last element is not happy')
+    print('len is not > 3 and last element is not happy')

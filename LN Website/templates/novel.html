@@ -1,0 +1,15 @@
+<!-- Add this to the header section -->
+<header>
+    <h1>Light Novel Translations</h1>
+    <nav>
+        <a href="/">Home</a>
+        {% if current_user.is_authenticated %}
+            <div class="user-info">
+                Welcome, {{ current_user.id }}!
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+    </nav>
+</header>

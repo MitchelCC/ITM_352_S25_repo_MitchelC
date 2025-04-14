@@ -10,3 +10,5 @@ respondent_ids = (1012, 1035, 1021, 1053)
 survey_responses.append(respondent_ids)
 
 print(survey_responses)
+
+#lists is a collection of values

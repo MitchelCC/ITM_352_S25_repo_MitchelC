@@ -16,11 +16,13 @@ try:
     soup = BeautifulSoup(html_content, 'html.parser')
 
     people_sections = soup.find_all('div', class_=['view-content', 'people-listing'])
-
+#finds all individual people entries across all sections
     people = []
     for section in people_sections:
+        #look for different possible item containers
         items = section.find_all(['div', 'article'], class_=['views-row', 'person-item', 'faculty-member'])
         people.extend(items)
+    #print each person's name and the total count
     print ("ITM People Found:")
     for i, person in enumerate(people, 1):
         name_tag = person.select_one('h2.title a, h3.name a, .person-name')

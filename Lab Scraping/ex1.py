@@ -5,7 +5,8 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 url = "https://data.cityofchicago.org/Historic-Preservation/Landmark-Districts/zidz-sdfj/about_data"
 
-with urllib.request.urlopen(url) as response:
+try:
+    response = urllib.request.urlopen(url)
     print(response)
-    html = response.read()
-    print(html.decode('utf-8'))
+except Exception as e:
+    print(f"An error occurred: {e}")

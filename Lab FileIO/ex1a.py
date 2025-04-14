@@ -1,2 +1,4 @@
 file_obj = open('names.txt', 'r')
-print(type(file_obj))
+print(file_obj.read())
+file_obj.close()
+
