@@ -1,27 +1,25 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Light Novel Translations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Light Novel Translations</h1>
+        <nav>
+            <a href="/">Home</a>
+            {% if current_user.is_authenticated %}
+                <div class="user-info">
+                    Welcome, {{ current_user.id }}!
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                </div>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </nav>
+    </header>
 
-{% block content %}
-<div class="login-container">
-    <h2>Login</h2>
-    <!-- Add error message display -->
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="alert alert-danger">
-                {{ messages[0] }}
-            </div>
-        {% endif %}
-    {% endwith %}
-    
-    <form method="POST" action="{{ url_for('login') }}">
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <button type="submit">Login</button>
-    </form>
-</div>
-{% endblock %}
+    {% block content %}{% endblock %}
+</body>
+</html>

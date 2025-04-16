@@ -1,15 +1,19 @@
-<!-- Add this to the header section -->
-<header>
-    <h1>Light Novel Translations</h1>
-    <nav>
-        <a href="/">Home</a>
-        {% if current_user.is_authenticated %}
-            <div class="user-info">
-                Welcome, {{ current_user.id }}!
-                <a href="{{ url_for('logout') }}">Logout</a>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="novel-container">
+    <img src="{{ url_for('static', filename='images/' + novel.cover) }}" alt="{{ novel.title }}" class="cover">
+    <div class="novel-info">
+        <h2>{{ novel.title }}</h2>
+        <p>{{ novel.summary }}</p>
+        <div class="chapters">
+            <h3>Chapters ({{ novel.chapters }})</h3>
+            <div class="chapter-list">
+                {% for chapter in range(1, novel.chapters+1) %}
+                    <a href="#" class="chapter-btn">Chapter {{ chapter }}</a>
+                {% endfor %}
             </div>
-        {% else %}
-            <a href="{{ url_for('login') }}">Login</a>
-        {% endif %}
-    </nav>
-</header>
+        </div>
+    </div>
+</div>
+{% endblock %}
