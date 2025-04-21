@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="result-container">
+        <h1>Quiz Completed!</h1>
+        <div class="summary">
+            <p>Final Score: {{ result.score }}/{{ result.total }}</p>
+            <p>Time Taken: {{ result.time }}</p>
+        </div>
+        
+        {% if result.incorrect %}
+        <div class="mistakes">
+            <h2>Areas for Improvement:</h2>
+            {% for item in result.incorrect %}
+            <div class="mistake">
+                <h3>{{ item.question }}</h3>
+                <p class="correct">Correct Answer: {{ item.correct }}</p>
+                <p class="user-answer">Your Answer: {{ item.user_answer }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

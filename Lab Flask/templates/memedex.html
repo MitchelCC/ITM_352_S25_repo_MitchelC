@@ -1,0 +1,48 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wholesome Memes</title>
+    <meta http-equiv="refresh" content="10">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        .meme-container {
+            max-width: 600px;
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .meme-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .subreddit {
+            margin-top: 10px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wholesome Memes</h1>
+    <div class="meme-container">
+        {% if meme_url %}
+            <img src="{{ meme_url }}" class="meme-img" alt="Wholesome Meme">
+            <div class="subreddit">
+                From r/{{ subreddit }}
+            </div>
+        {% else %}
+            <p>Couldn't fetch a meme. Try refreshing!</p>
+        {% endif %}
+    </div>
+</body>
+</html>
