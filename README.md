@@ -1,2 +1,1 @@
-About Me
-My name is Mitchel Camacho.
+My name is Mitchel Camacho, I am a junior at the Univeristy of Hawaii studying Finance and Management Information System. I have a passion for coding, and leveraging data to empower businesses and make profitable decisions. These are projects I'm working on in school, as well as some of my personal projects. I have a strong foundation in Python, well versed in libraries such as Flask, Pandas, and Numpy. 
