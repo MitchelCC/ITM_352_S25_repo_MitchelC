@@ -38,19 +38,17 @@ def save_visitors(visitors):
 
 @app.before_request
 def track_users():
-     # Check for existing visitor cookie
-    visitor_id = request.cookies.get('quizy_visitor')
-    
-    if not visitor_id:
-        # Create new visitor ID if none exists
-        visitor_id = str(uuid.uuid4())
-        session['visitor_id'] = visitor_id
-        resp = make_response(redirect(url_for('welcome')))
-        resp.set_cookie('quizy_visitor', visitor_id, max_age=60*60*24*365*2)
-        return resp
-    
-    # Store in session if cookie exists
-    session['visitor_id'] = visitor_id
+    if 'visitor_id' not in session:
+        session['visitor_id'] = str(uuid.uuid4())
+        session.permanent = True
+
+    visitors = load_visitors()
+    visitor_id = session ['visitor_id']
+
+    if (visitor_id not in visitors and 
+        request.endpoint not in ['welcome', 'static', 'login'] and 
+        not request.path.startswith('/static')):
+        return redirect(url_for('welcome'))
 
 @app.route('/welcome', methods=['GET', 'POST'])
 def welcome():
@@ -69,8 +67,12 @@ def welcome():
         save_visitors(visitors)
         return redirect(url_for('login'))
     
-    # Only new visitors see welcome page
-    return render_template('welcome.html')
+    resp = make_response(redirect(url_for('index')))
+    resp.set_cookie('quizy_visitor', session['visitor_id'],
+                        max_age = 60*60*24*31)
+        
+    return resp
+
 
 @app.route('/history')
 def history():
@@ -105,9 +107,7 @@ def index():
                              username=visitor_data['name'],
                              scores=visitor_data['scores'])
     
-    # New visitors get redirected to welcome
-    return redirect(url_for('welcome'))
-
+    return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -285,7 +285,7 @@ def result():
             })
             
             save_visitors(visitors)
-
+            
     except Exception as e:
         flash("Couldn't save score. Please try again.")
         print(f"Error saving score: {str(e)}")

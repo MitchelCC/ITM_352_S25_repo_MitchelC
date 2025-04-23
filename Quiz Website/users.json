@@ -6,5 +6,9 @@
     "Mitchel": {
         "password": "1234",
         "high_score": 0
+    },
+    "mitchel": {
+        "password": "1234",
+        "high_score": 0
     }
 }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        {% if user %}
+            <h1>{{ user.name }}'s Quiz History</h1>
+            
+            {% if user.scores %}
+    <h2>Quiz Attempts:</h2>
+    {% for score in user.scores %}
+    <div class="score-card">
+        <p>Score: {{ score.score }}/{{ score.total }}</p>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No quiz attempts yet!</p>
+{% endif %}
+            
+        {% else %}
+            <p>No history found</p>
+        {% endif %}
+        
+        <a href="{{ url_for('index') }}">Back to Home</a>
+    </div>
+</body>
+</html>

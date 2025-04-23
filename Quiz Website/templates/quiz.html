@@ -8,9 +8,11 @@
     <div class="quiz-container">
         <div class="quiz-header">
             <div class="score">Score: {{ session.score }}/{{ session.questions|length }}</div>
-            <div class="progress">{{ progress }}</div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: {{ progress_percent ~ '%' }}"></div>
+            </div>
+            <div class="progress-text">{{ progress }} ({{ progress_percent }}%)</div>
         </div>
-        
         <div class="question-box">
             <h2>{{ question.question }}</h2>
             <form method="POST">

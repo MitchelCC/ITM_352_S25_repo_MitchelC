@@ -132,3 +132,63 @@ body {
 
 .correct { color: #28a745; }
 .user-answer { color: #dc3545; }
+
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.score-card {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-left: 4px solid #007bff;
+    background: #f8f9fa;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+.progress-container {
+    width: 100%;
+    height: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.3s ease;
+    width: 0;
+}
+
+.progress-text {
+    text-align: center;
+    margin: 5px 0;
+    font-weight: bold;
+}
+.history-list {
+    margin: 20px 0;
+}
+
+.history-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.history-score {
+    color: #4CAF50;
+    font-weight: bold;
+}
