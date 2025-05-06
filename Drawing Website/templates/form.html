@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Interests Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+        }
+        .form-container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .checkbox-group {
+            margin: 20px 0;
+            column-count: 2;
+        }
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Explore Your Career Interests</h1>
+    <div class="form-container">
+        <form action="/results" method="POST">
+            <div class="checkbox-group">
+                <h3>Select Your Interests:</h3>
+                <label><input type="checkbox" name="interests" value="Helping"> Helping</label>
+                <label><input type="checkbox" name="interests" value="Healthcare"> Healthcare</label>
+                <label><input type="checkbox" name="interests" value="Labor"> Labor</label>
+                <label><input type="checkbox" name="interests" value="Technology"> Technology</label>
+                <label><input type="checkbox" name="interests" value="Sales"> Sales</label>
+                <label><input type="checkbox" name="interests" value="Creative"> Creative</label>
+                <label><input type="checkbox" name="interests" value="Business"> Business</label>
+                <label><input type="checkbox" name="interests" value="Science"> Science</label>
+                <label><input type="checkbox" name="interests" value="Education"> Education</label>
+                <label><input type="checkbox" name="interests" value="Public Service"> Public Service</label>
+                <label><input type="checkbox" name="interests" value="Sports"> Sports</label>
+                <label><input type="checkbox" name="interests" value="Travel"> Travel</label>
+                <label><input type="checkbox" name="interests" value="Engineering"> Engineering</label>
+                <label><input type="checkbox" name="interests" value="Architecture"> Architecture</label>
+                <label><input type="checkbox" name="interests" value="Fashion"> Fashion</label>
+                <label><input type="checkbox" name="interests" value="Gaming"> Gaming</label>
+            </div>
+            <button type="submit">Find Careers</button>
+        </form>
+    </div>
+    <a href="/" class="back-link">Back to Home</a>
+</body>
+</html>

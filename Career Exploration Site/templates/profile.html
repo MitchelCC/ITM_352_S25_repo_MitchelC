@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .section { margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; }
+        .career-item { margin-bottom: 10px; }
+        .unlike-btn { background: #dc3545; color: white; padding: 5px; border: none; cursor: pointer; }
+        .unlike-btn:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+    <h1>Profile</h1>
+    <div class="section">
+        <h2>Interests</h2>
+        <ul>
+            {% for interest in interests %}
+                <li>{{ interest }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="section">
+        <h2>Liked Careers</h2>
+        {% if liked_careers %}
+            {% for career in liked_careers %}
+                <div class="career-item">
+                    <h3>{{ career }}</h3>
+                    <p>Average Salary: {{ career_stats[career].get('avg_salary', 'N/A') }}</p>
+                    <p>Job Growth: {{ career_stats[career].get('job_growth', 'N/A') }}</p>
+                    <p>Employment: {{ career_stats[career].get('employment', 'N/A') }}</p>
+                    <form action="{{ url_for('unlike_career', career=career) }}" method="GET">
+                        <button type="submit" class="unlike-btn">Unlike</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No liked careers yet.</p>
+        {% endif %}
+    </div>
+    <a href="/form">Back to Form</a> | <a href="/logout">Logout</a>
+</body>
+</html>

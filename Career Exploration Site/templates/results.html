@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Career Results</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .career-item { margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; }
+        .like-btn, .unlike-btn { padding: 5px; border: none; cursor: pointer; }
+        .like-btn { background: #007bff; color: white; }
+        .like-btn:hover { background: #0056b3; }
+        .unlike-btn { background: #dc3545; color: white; }
+        .unlike-btn:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+    <h1>Your Career Matches</h1>
+    {% if careers %}
+        {% for career in careers %}
+            <div class="career-item">
+                <h3>{{ career }}</h3>
+                <p>Education: {{ career_paths[career]['education'] }}</p>
+                <p>Steps:</p>
+                <ul>
+                    {% for step in career_paths[career]['steps'] %}
+                        <li>{{ step }}</li>
+                    {% endfor %}
+                </ul>
+                {% if career in liked_careers %}
+                    <form action="{{ url_for('unlike_career', career=career) }}" method="GET">
+                        <button type="submit" class="unlike-btn">Unlike</button>
+                    </form>
+                {% else %}
+                    <form action="{{ url_for('like_career', career=career) }}" method="GET">
+                        <button type="submit" class="like-btn">Like</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No careers matched your interests.</p>
+    {% endif %}
+    <a href="/profile">View Profile</a> | <a href="/logout">Logout</a>
+</body>
+</html>
