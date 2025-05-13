@@ -1,16 +1,40 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+import json
+import os
 
 app = Flask(__name__)
 app.secret_key = '1234'  
 
-# In-memory storage (replace with database in production)
-users = {}
-user_data = {}  # {username: {'interests': [], 'liked_careers': []}}
+# File to store user data
+DATA_FILE = 'user_data.json'
+
+# loads existing data or initialize empty dictionaries
+try:
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, 'r') as f:
+            data = json.load(f)
+            users = data.get('users', {})
+            user_data = data.get('user_data', {})
+    else:
+        users = {}
+        user_data = {}  # {username: {'interests': [], 'liked_careers': []}}
+except (json.JSONDecodeError, IOError) as e:
+    print(f"Error loading user data: {e}")
+    users = {}
+    user_data = {}
+
+# Save data to file
+def save_data():
+    try:
+        with open(DATA_FILE, 'w') as f:
+            json.dump({'users': users, 'user_data': user_data}, f)
+    except IOError as e:
+        print(f"Error saving user data: {e}")
 
 # General interest categories mapped to careers
 GENERAL_INTEREST_CAREERS = {
     "Helping": ["Social Worker", "Counselor", "Teacher", "Nurse", "Nonprofit Manager", "Music Therapist", "Athletic Trainer", "Conservation Officer"],
-    "Healthcare": ["Nurse", "Physical Therapist", "Pharmacist"],
+    "Healthcare": ["Nurse", "Physical Therapist", "Pharmacist", "Radiologist"],
     "Labor": ["Carpenter", "Construction Manager", "Farmer", "Chef", "Pastry Chef"],
     "Technology": ["Software Developer", "Data Scientist", "Cybersecurity Analyst", "Game Developer", "Sound Engineer", "Agricultural Engineer"],
     "Sales": ["Sales Manager", "Retail Salesperson", "Marketing Specialist", "Sports Marketing Manager", "Travel Agent", "Fashion Buyer"],
@@ -27,7 +51,7 @@ GENERAL_INTEREST_CAREERS = {
     "Gaming": ["Game Developer", "Esports Manager", "Game Tester"]
 }
 
-# Function to generate career path outline
+# the function to generate career path outline
 def get_career_path(career):
     career_paths = {
         "Software Developer": {
@@ -82,6 +106,15 @@ def get_career_path(career):
                 "Pass licensure exams (NAPLEX)",
                 "Gain pharmacy experience",
                 "Pursue residency for specialization"
+            ]
+        },
+        "Radiologist": {
+            "education": "Medical Degree (MD or DO) + 4-year residency in Radiology",
+            "steps": [
+                "Complete medical school",
+                "Complete a 4-year radiology residency",
+                "Pursue a 1-2 year fellowship (optional)",
+                "Obtain board certification from the American Board of Radiology"
             ]
         },
         "Civil Engineer": {
@@ -608,7 +641,7 @@ def get_career_path(career):
         ]
     })
 
-# Mock career statistics (simulated, could be pulled from Google in reality)
+# Career statistics for mock data
 MOCK_CAREER_STATS = {
     "Social Worker": {"avg_salary": "$50,000", "job_growth": "9% per year", "employment": "0.7 million"},
     "Counselor": {"avg_salary": "$48,000", "job_growth": "8% per year", "employment": "0.3 million"},
@@ -620,6 +653,7 @@ MOCK_CAREER_STATS = {
     "Conservation Officer": {"avg_salary": "$55,000", "job_growth": "3% per year", "employment": "0.02 million"},
     "Physical Therapist": {"avg_salary": "$90,000", "job_growth": "17% per year", "employment": "0.25 million"},
     "Pharmacist": {"avg_salary": "$125,000", "job_growth": "2% per year", "employment": "0.3 million"},
+    "Radiologist": {"avg_salary": "$450,000", "job_growth": "7% per year", "employment": "0.05 million"},
     "Carpenter": {"avg_salary": "$45,000", "job_growth": "2% per year", "employment": "0.9 million"},
     "Construction Manager": {"avg_salary": "$95,000", "job_growth": "8% per year", "employment": "0.4 million"},
     "Farmer": {"avg_salary": "$40,000", "job_growth": "1% per year", "employment": "0.8 million"},
@@ -667,125 +701,216 @@ MOCK_CAREER_STATS = {
     "Architect": {"avg_salary": "$80,000", "job_growth": "3% per year", "employment": "0.1 million"},
     "Game Developer": {"avg_salary": "$85,000", "job_growth": "10% per year", "employment": "0.1 million"},
     "Esports Manager": {"avg_salary": "$70,000", "job_growth": "15% per year", "employment": "0.02 million"},
-    "Game Tester": {"avg_salary": "$40,000", "job_growth": "8% per year", "employment": "0.05 million"}
+    "Game Tester": {"avg_salary": "$40,000", "job_growth": "8% per year", "employment": "0.05 million"},
+    "Sustainability Consultant": {"avg_salary": "$75,000", "job_growth": "8% per year", "employment": "0.08 million"},
+    "Sports Coach": {"avg_salary": "$45,000", "job_growth": "6% per year", "employment": "0.15 million"},
+    "Tour Guide": {"avg_salary": "$35,000", "job_growth": "2% per year", "employment": "0.05 million"},
+    "Flight Attendant": {"avg_salary": "$40,000", "job_growth": "3% per year", "employment": "0.1 million"}
 }
+
+# Hardcoded chart paths for existing charts
+HARDCODED_CHART_PATHS = {
+    "Software Developer": "static_Software_Developer_chart.png",
+    "Data Scientist": "static_Data_Scientist_chart.png",
+    "Physical Therapist": "static_Physical_Therapist_chart.png",
+    "Nurse": "static_Nurse_chart.png"
+}
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    print(f"Unexpected error: {e}")
+    return "An unexpected error occurred. Please try again later. <a href='/'>Go back to home</a>", 500
 
 @app.route('/')
 def home():
-    if 'username' in session:
-        return redirect(url_for('form'))
-    return render_template('index.html')
+    try:
+        if 'username' in session:
+            return redirect(url_for('welcome'))
+        return render_template('index.html')
+    except Exception as e:
+        print(f"Error in home route: {e}")
+        raise
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        if username not in users:
-            users[username] = password
-            user_data[username] = {'interests': [], 'liked_careers': []}
-            session['username'] = username
-            return redirect(url_for('form'))
-        return "Username already exists. <a href='/register'>Try again</a>"
-    return render_template('register.html')
+    try:
+        if request.method == 'POST':
+            username = request.form.get('username')
+            password = request.form.get('password')
+            
+            if not username or not password:
+                return "Username and password are required. <a href='/register'>Try again</a>", 400
+            
+            if username not in users:
+                users[username] = password
+                user_data[username] = {'interests': [], 'liked_careers': []}
+                save_data()
+                session['username'] = username
+                return redirect(url_for('welcome'))
+            return "Username already exists. <a href='/register'>Try again</a>", 400
+        return render_template('register.html')
+    except Exception as e:
+        print(f"Error in register route: {e}")
+        raise
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        if username in users and users[username] == password:
-            session['username'] = username
-            return redirect(url_for('form'))
-        return "Invalid credentials. <a href='/login'>Try again</a>"
-    return render_template('login.html')
+    try:
+        if request.method == 'POST':
+            username = request.form.get('username')
+            password = request.form.get('password')
+            
+            if not username or not password:
+                return "Username and password are required. <a href='/login'>Try again</a>", 400
+            
+            if username in users and users[username] == password:
+                session['username'] = username
+                save_data()
+                return redirect(url_for('welcome'))
+            return "Invalid credentials. <a href='/login'>Try again</a>", 401
+        return render_template('login.html')
+    except Exception as e:
+        print(f"Error in login route: {e}")
+        raise
+
+@app.route('/welcome')
+def welcome():
+    try:
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        if session['username'] not in user_data:
+            session.pop('username', None)
+            return redirect(url_for('login'))
+        return render_template('welcome.html')
+    except Exception as e:
+        print(f"Error in welcome route: {e}")
+        raise
 
 @app.route('/form')
 def form():
-    if 'username' not in session:
-        return redirect(url_for('login'))
-    if session['username'] not in user_data:
-        session.pop('username', None)
-        return redirect(url_for('login'))
-    return render_template('form.html')
+    try:
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        if session['username'] not in user_data:
+            session.pop('username', None)
+            return redirect(url_for('login'))
+        return render_template('form.html')
+    except Exception as e:
+        print(f"Error in form route: {e}")
+        raise
 
 @app.route('/results', methods=['GET', 'POST'])
 def results():
-    if 'username' not in session:
-        return redirect(url_for('login'))
-    
-    username = session['username']
-    if username not in user_data:
-        session.pop('username', None)
-        return redirect(url_for('login'))
-    
-    if request.method == 'POST':
-        interests = request.form.getlist('interests')
-        matched_careers = set()
-        for interest in interests:
-            if interest in GENERAL_INTEREST_CAREERS:
-                matched_careers.update(GENERAL_INTEREST_CAREERS[interest])
-        matched_careers = list(matched_careers)
-        career_paths = {career: get_career_path(career) for career in matched_careers}
-        user_data[username]['interests'] = interests
-        session['matched_careers'] = matched_careers
-        session['career_paths'] = career_paths
+    try:
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        
+        username = session['username']
+        if username not in user_data:
+            session.pop('username', None)
+            return redirect(url_for('login'))
+        
+        if request.method == 'POST':
+            interests = request.form.getlist('interests')
+            if not interests:
+                return "Please select at least one interest. <a href='/form'>Go back</a>", 400
+            
+            matched_careers = set()
+            for interest in interests:
+                if interest in GENERAL_INTEREST_CAREERS:
+                    matched_careers.update(GENERAL_INTEREST_CAREERS[interest])
+            matched_careers = list(matched_careers)
+            career_paths = {career: get_career_path(career) for career in matched_careers}
+            user_data[username]['interests'] = interests
+            session['matched_careers'] = matched_careers
+            session['career_paths'] = career_paths
+            liked_careers = user_data[username]['liked_careers']
+            save_data()
+            return render_template('results.html', careers=matched_careers, career_paths=career_paths, liked_careers=liked_careers)
+        
+        matched_careers = session.get('matched_careers', [])
+        career_paths = session.get('career_paths', {})
         liked_careers = user_data[username]['liked_careers']
         return render_template('results.html', careers=matched_careers, career_paths=career_paths, liked_careers=liked_careers)
-    
-    # Handle GET request (e.g., after liking/unliking a career)
-    matched_careers = session.get('matched_careers', [])
-    career_paths = session.get('career_paths', {})
-    liked_careers = user_data[username]['liked_careers']
-    return render_template('results.html', careers=matched_careers, career_paths=career_paths, liked_careers=liked_careers)
+    except Exception as e:
+        print(f"Error in results route: {e}")
+        raise
 
 @app.route('/like_career/<career>')
 def like_career(career):
-    if 'username' not in session:
-        return redirect(url_for('login'))
-    username = session['username']
-    if username not in user_data:
-        session.pop('username', None)
-        return redirect(url_for('login'))
-    # Check if the career exists in GENERAL_INTEREST_CAREERS
-    all_careers = sum(GENERAL_INTEREST_CAREERS.values(), [])
-    if career in all_careers and career not in user_data[username]['liked_careers']:
-        user_data[username]['liked_careers'].append(career)
-    return redirect(url_for('results'))
+    try:
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        username = session['username']
+        if username not in user_data:
+            session.pop('username', None)
+            return redirect(url_for('login'))
+        all_careers = sum(GENERAL_INTEREST_CAREERS.values(), [])
+        if career in all_careers and career not in user_data[username]['liked_careers']:
+            user_data[username]['liked_careers'].append(career)
+            save_data()
+        return redirect(url_for('results'))
+    except Exception as e:
+        print(f"Error in like_career route: {e}")
+        raise
 
 @app.route('/unlike_career/<career>')
 def unlike_career(career):
-    if 'username' not in session:
-        return redirect(url_for('login'))
-    username = session['username']
-    if username not in user_data:
-        session.pop('username', None)
-        return redirect(url_for('login'))
-    # Check if the career exists in GENERAL_INTEREST_CAREERS and is in liked_careers
-    all_careers = sum(GENERAL_INTEREST_CAREERS.values(), [])
-    if career in all_careers and career in user_data[username]['liked_careers']:
-        user_data[username]['liked_careers'].remove(career)
-    return redirect(url_for('results'))
+    try:
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        username = session['username']
+        if username not in user_data:
+            session.pop('username', None)
+            return redirect(url_for('login'))
+        all_careers = sum(GENERAL_INTEREST_CAREERS.values(), [])
+        if career in all_careers and career in user_data[username]['liked_careers']:
+            user_data[username]['liked_careers'].remove(career)
+            save_data()
+        return redirect(url_for('results'))
+    except Exception as e:
+        print(f"Error in unlike_career route: {e}")
+        raise
 
 @app.route('/profile')
 def profile():
-    if 'username' not in session:
-        return redirect(url_for('login'))
-    username = session['username']
-    if username not in user_data:
-        session.pop('username', None)
-        return redirect(url_for('login'))
-    interests = user_data[username]['interests']
-    liked_careers = user_data[username]['liked_careers']
-    career_stats = {career: MOCK_CAREER_STATS.get(career, {}) for career in liked_careers}
-    return render_template('profile.html', interests=interests, liked_careers=liked_careers, career_stats=career_stats)
+    try:
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        username = session['username']
+        if username not in user_data:
+            session.pop('username', None)
+            return redirect(url_for('login'))
+        interests = user_data[username]['interests']
+        liked_careers = user_data[username]['liked_careers']
+        career_stats = {career: MOCK_CAREER_STATS.get(career, {}) for career in liked_careers}
+
+        # using hardcoded chart paths for Healthcare and techn careers
+        chart_paths = {}
+        for career in liked_careers:
+            if career in GENERAL_INTEREST_CAREERS.get("Healthcare", []) or career in GENERAL_INTEREST_CAREERS.get("Technology", []):
+                if career in HARDCODED_CHART_PATHS:
+                    chart_paths[career] = url_for('static', filename=HARDCODED_CHART_PATHS[career])
+                else:
+                    print(f"No chart available for {career}")
+        print(f"Chart paths: {chart_paths}")
+
+        return render_template('profile.html', interests=interests, liked_careers=liked_careers, career_stats=career_stats, chart_paths=chart_paths)
+    except Exception as e:
+        print(f"Error in profile route: {e}")
+        raise
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
-    session.pop('matched_careers', None)
-    session.pop('career_paths', None)
-    return redirect(url_for('home'))
+    try:
+        session.pop('username', None)
+        session.pop('matched_careers', None)
+        session.pop('career_paths', None)
+        save_data()
+        return redirect(url_for('home'))
+    except Exception as e:
+        print(f"Error in logout route: {e}")
+        raise
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -9,6 +9,7 @@
         .career-item { margin-bottom: 10px; }
         .unlike-btn { background: #dc3545; color: white; padding: 5px; border: none; cursor: pointer; }
         .unlike-btn:hover { background: #c82333; }
+        img { max-width: 300px; height: auto; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -28,8 +29,13 @@
                 <div class="career-item">
                     <h3>{{ career }}</h3>
                     <p>Average Salary: {{ career_stats[career].get('avg_salary', 'N/A') }}</p>
-                    <p>Job Growth: {{ career_stats[career].get('job_growth', 'N/A') }}</p>
+                    <p>Job Growth: {{ career_stats[career].get('avg_salary', 'N/A') }}</p>
                     <p>Employment: {{ career_stats[career].get('employment', 'N/A') }}</p>
+                    {% if chart_paths.get(career) %}
+                        <img src="{{ chart_paths[career] }}" alt="{{ career }} Chart" style="max-width: 300px; height: auto;">
+                    {% else %}
+                        <p>No chart available for {{ career }}</p>
+                    {% endif %}
                     <form action="{{ url_for('unlike_career', career=career) }}" method="GET">
                         <button type="submit" class="unlike-btn">Unlike</button>
                     </form>
